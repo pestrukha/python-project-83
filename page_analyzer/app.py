@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 from dotenv import load_dotenv
 from page_analyzer.validator import normalize_url, validate_url
+from page_analyzer.db import insert_url, get_url_by_id
 
 
 load_dotenv()
@@ -25,4 +26,15 @@ def add_url():
         flash(url_error, 'danger')
         return render_template('index.html'), 422
 
-    return '1111'
+    new_id = insert_url(normal_url)
+    flash('Страница успешно добавлена', 'success')
+    return redirect(url_for('show_url_page', url_id=new_id))
+
+
+@app.route('/urls/<int:url_id>')
+def show_url_page(url_id):
+    url = get_url_by_id(url_id)
+    if not url:
+        flash('URL не найден', 'danger')
+        return redirect(url_for('add_url'))
+    return render_template('url.html', url=url)
