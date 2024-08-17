@@ -38,4 +38,4 @@ def show_url_page(url_id):
     if not url:
         flash('URL не найден', 'danger')
         return redirect(url_for('add_url'))
-    return render_template('url.html', url=url)
+    return render_template('url.html', url_data=url)
