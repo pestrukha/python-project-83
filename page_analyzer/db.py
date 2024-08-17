@@ -30,6 +30,13 @@ def release_conn(conn):
 def get_db_cursor():
     conn = get_conn()
     try:
+        try:
+            with conn.cursor() as test_cursor:
+                test_cursor.execute('SELECT 1')
+        except (psycopg2.OperationalError, psycopg2.InterfaceError):
+            release_conn(conn)
+            conn = get_conn()
+
         with conn.cursor(cursor_factory=RealDictCursor) as cursor:
             yield cursor
         conn.commit()
