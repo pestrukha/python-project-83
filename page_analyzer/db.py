@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from psycopg2 import pool
+from psycopg2 import pool, OperationalError, InterfaceError
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 import os
@@ -33,7 +33,7 @@ def get_db_cursor():
         try:
             with conn.cursor() as test_cursor:
                 test_cursor.execute('SELECT 1')
-        except (psycopg2.OperationalError, psycopg2.InterfaceError):
+        except (OperationalError, InterfaceError):
             release_conn(conn)
             conn = get_conn()
 
