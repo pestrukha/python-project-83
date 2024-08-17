@@ -39,3 +39,8 @@ def show_url_page(url_id):
         flash('URL не найден', 'danger')
         return redirect(url_for('add_url'))
     return render_template('url.html', url_data=url)
+
+
+@app.get('/urls')
+def show_all_urls():
+    return render_template('urls.html')
