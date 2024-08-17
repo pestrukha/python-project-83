@@ -9,18 +9,22 @@ load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
 db_pool = None
 
+
 def init_db_pool(database_url):
     global db_pool
     db_pool = pool.SimpleConnectionPool(1, 10, dsn=database_url)
+
 
 def get_conn():
     if db_pool is None:
         raise Exception("Connection pool is not initialized.")
     return db_pool.getconn()
 
+
 def release_conn(conn):
     if db_pool:
         db_pool.putconn(conn)
+
 
 @contextmanager
 def get_db_cursor():
@@ -32,6 +36,7 @@ def get_db_cursor():
     finally:
         release_conn(conn)
 
+
 def insert_url(name):
     with get_db_cursor() as cursor:
         cursor.execute(
@@ -40,6 +45,7 @@ def insert_url(name):
         )
         url_id = cursor.fetchone()['id']
     return url_id
+
 
 def get_url_by_id(url_id):
     with get_db_cursor() as cursor:
