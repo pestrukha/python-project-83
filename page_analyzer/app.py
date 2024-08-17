@@ -2,14 +2,15 @@ import os
 from flask import Flask, render_template, request, flash, redirect, url_for
 from dotenv import load_dotenv
 from page_analyzer.validator import normalize_url, validate_url
-from page_analyzer.db import insert_url, get_url_by_id
-
+from page_analyzer.db import insert_url, get_url_by_id, init_db_pool
 
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['DATABASE_URL'] = os.getenv('DATABASE_URL')
 
+# Инициализируем пул соединений при запуске приложения
+init_db_pool(app.config['DATABASE_URL'])
 
 @app.route('/')
 def index():
