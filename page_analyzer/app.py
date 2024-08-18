@@ -1,8 +1,18 @@
 import os
+import requests
 from flask import Flask, render_template, request, flash, redirect, url_for
 from dotenv import load_dotenv
 from page_analyzer.validator import normalize_url, validate_url
-from page_analyzer.db import insert_url, get_url_by_id, init_db_pool
+from page_analyzer.html_parser import parse_html
+from page_analyzer.db import (
+    init_db_pool,
+    insert_url,
+    get_url_by_id,
+    get_checked_urls,
+    add_check,
+    get_checks
+)
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -35,12 +45,37 @@ def add_url():
 @app.route('/urls/<int:url_id>')
 def show_url_page(url_id):
     url = get_url_by_id(url_id)
+    all_checks = get_checks(url_id)
     if not url:
         flash('URL не найден', 'danger')
         return redirect(url_for('add_url'))
-    return render_template('url.html', url_data=url)
+    return render_template(
+        'url.html',
+        url_data=url,
+        all_checks=all_checks
+    )
 
 
 @app.get('/urls')
 def show_all_urls():
-    return render_template('urls.html')
+    checked_urls = get_checked_urls()
+    return render_template('urls.html', checked_urls=checked_urls)
+
+
+@app.post('/urls/<id>/checks')
+def check_url(id):
+    url = get_url_by_id(id)
+
+    try:
+        response = requests.get(url.name)
+        response.raise_for_status()
+
+    except requests.exceptions.RequestException:
+        flash('Произошла ошибка при проверке', 'danger')
+        return redirect(url_for('show_url_page', id=id))
+
+    status = response.status_code
+    h1, title, description = parse_html(response.text)
+    add_check(id, status, h1, title, description)
+    flash('Страница успешно проверена', 'success')
+    return redirect(url_for('show_url_page', id=id))

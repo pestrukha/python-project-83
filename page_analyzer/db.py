@@ -62,3 +62,46 @@ def get_url_by_id(url_id):
         )
         url = cursor.fetchone()
     return url
+
+
+def add_check(url_id, status, h1, title, description):
+    with get_db_cursor() as cursor:
+        cursor.execute(
+            """
+            INSERT INTO url_checks (
+                url_id,
+                status,
+                h1,
+                title,
+                description
+            )
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (
+                url_id,
+                status,
+                h1,
+                title,
+                description
+            )
+        )
+
+
+def get_checks(url_id):
+    query = """
+        SELECT *
+        FROM url_checks
+        WHERE url_id = %s
+        ORDER BY created_at DESC
+    """
+    value = (url_id,)
+
+    with get_db_cursor() as cursor:
+        cursor.execute(query, value)
+        all_checks = cursor.fetchall()
+
+    return all_checks
+
+
+def get_checked_urls():
+    pass

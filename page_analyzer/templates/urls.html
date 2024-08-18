@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for url in all_urls %}
+        {% for url in checked_urls %}
             <tr>
                 <td>{{ url.id }}</td>
                 <td><a href="{{ url_for('show_url_page', id=url.id )}}">{{ url.name }}</a></td>
