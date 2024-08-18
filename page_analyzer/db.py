@@ -103,5 +103,5 @@ def get_checks(url_id):
     return all_checks
 
 
-def get_checked_urls():
-    pass
+# def get_checked_urls():
+#     pass

@@ -8,7 +8,6 @@ from page_analyzer.db import (
     init_db_pool,
     insert_url,
     get_url_by_id,
-    get_checked_urls,
     add_check,
     get_checks
 )
@@ -58,8 +57,11 @@ def show_url_page(url_id):
 
 @app.get('/urls')
 def show_all_urls():
-    checked_urls = get_checked_urls()
-    return render_template('urls.html', checked_urls=checked_urls)
+    # checked_urls = get_checked_urls()
+    return render_template(
+        'urls.html',
+        # checked_urls=checked_urls
+    )
 
 
 @app.post('/urls/<id>/checks')
@@ -67,15 +69,15 @@ def check_url(id):
     url = get_url_by_id(id)
 
     try:
-        response = requests.get(url.name)
+        response = requests.get(url['name'])
         response.raise_for_status()
 
     except requests.exceptions.RequestException:
         flash('Произошла ошибка при проверке', 'danger')
-        return redirect(url_for('show_url_page', id=id))
+        return redirect(url_for('show_url_page', url_id=id))
 
     status = response.status_code
     h1, title, description = parse_html(response.text)
     add_check(id, status, h1, title, description)
     flash('Страница успешно проверена', 'success')
-    return redirect(url_for('show_url_page', id=id))
+    return redirect(url_for('show_url_page', url_id=id))
