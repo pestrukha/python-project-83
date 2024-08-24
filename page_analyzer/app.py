@@ -9,7 +9,8 @@ from page_analyzer.db import (
     insert_url,
     get_url_by_id,
     add_check,
-    get_checks
+    get_checks,
+    get_checked_urls
 )
 
 
@@ -57,10 +58,10 @@ def show_url_page(url_id):
 
 @app.get('/urls')
 def show_all_urls():
-    # checked_urls = get_checked_urls()
+    checked_urls = get_checked_urls()
     return render_template(
         'urls.html',
-        # checked_urls=checked_urls
+        checked_urls=checked_urls
     )
 
 

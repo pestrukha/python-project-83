@@ -1,12 +1,7 @@
 from contextlib import contextmanager
 from psycopg2 import pool, OperationalError, InterfaceError
 from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-DATABASE_URL = os.getenv('DATABASE_URL')
 db_pool = None
 
 
@@ -103,5 +98,21 @@ def get_checks(url_id):
     return all_checks
 
 
-# def get_checked_urls():
-#     pass
+def get_checked_urls():
+    query = """
+        SELECT
+            urls.id,
+            urls.name,
+            COALESCE(url_checks.status::text, '') as status,
+            COALESCE(DATE(MAX(url_checks.created_at))::text, '') as latest_check
+        FROM urls
+        LEFT JOIN url_checks ON urls.id = url_checks.url_id
+        GROUP BY urls.id, url_checks.status
+        ORDER BY urls.id DESC
+    """
+
+    with get_db_cursor() as cursor:
+        cursor.execute(query)
+        checked_urls = cursor.fetchall()
+
+    return checked_urls
