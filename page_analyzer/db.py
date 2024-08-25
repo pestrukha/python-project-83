@@ -59,7 +59,7 @@ def get_url_by_id(url_id):
     return url
 
 
-def add_check(url_id, status_code, h1, title, description):
+def insert_check(url_id, status_code, h1, title, description):
     with get_db_cursor() as cursor:
         cursor.execute(
             """

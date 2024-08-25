@@ -7,11 +7,11 @@ from page_analyzer.html_parser import parse_html
 from page_analyzer.db import (
     init_db_pool,
     insert_url,
-    get_url_by_id,
-    add_check,
+    insert_check,
     get_checks,
     get_checked_urls,
-    get_url_by_name
+    get_url_by_name,
+    get_url_by_id
 )
 
 
@@ -95,6 +95,6 @@ def check_url(id):
 
     status_code = response.status_code
     h1, title, description = parse_html(response.text)
-    add_check(id, status_code, h1, title, description)
+    insert_check(id, status_code, h1, title, description)
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('show_url_page', url_id=id))
