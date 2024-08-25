@@ -122,3 +122,13 @@ def get_checked_urls():
         checked_urls = cursor.fetchall()
 
     return checked_urls
+
+
+def get_url_by_name(url_name):
+    with get_db_cursor() as cursor:
+        cursor.execute(
+            'SELECT * FROM urls WHERE name = %s',
+            (url_name,)
+        )
+        url = cursor.fetchone()
+    return url

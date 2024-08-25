@@ -10,7 +10,8 @@ from page_analyzer.db import (
     get_url_by_id,
     add_check,
     get_checks,
-    get_checked_urls
+    get_checked_urls,
+    get_url_by_name
 )
 
 
@@ -36,6 +37,11 @@ def add_url():
     if url_error:
         flash(url_error, 'danger')
         return render_template('index.html'), 422
+
+    if get_url_by_name(normal_url):
+        old_url = get_url_by_name(normal_url)
+        flash('Страница уже существует', 'primary')
+        return redirect(url_for('show_url_page', url_id=old_url['id']))
 
     new_id = insert_url(normal_url)
     flash('Страница успешно добавлена', 'success')
