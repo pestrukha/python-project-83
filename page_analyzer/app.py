@@ -77,8 +77,8 @@ def check_url(id):
         flash('Произошла ошибка при проверке', 'danger')
         return redirect(url_for('show_url_page', url_id=id))
 
-    status = response.status_code
+    status_code = response.status_code
     h1, title, description = parse_html(response.text)
-    add_check(id, status, h1, title, description)
+    add_check(id, status_code, h1, title, description)
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('show_url_page', url_id=id))

@@ -17,7 +17,7 @@
                 <td>{{ url.id }}</td>
                 <td><a href="{{ url_for('show_url_page', url_id=url.id )}}">{{ url.name }}</a></td>
                 <td>{{ url.latest_check }}</td>
-                <td>{{ url.status }}</td>
+                <td>{{ url.status_code }}</td>
             </tr>
         {% endfor %}
         </tbody>

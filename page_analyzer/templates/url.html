@@ -2,7 +2,7 @@
 {% block content %}
 <h1>Сайт: {{url_data.name}}</h1>
 <div class="table-responsive">
-  <table class="table table-bordered table-hover mt-2">
+  <table class="table table-bordered table-hover mt-2" data-test="url">
     <tbody>
       <tr>
         <td>ID</td>
@@ -24,7 +24,7 @@
   <input type="submit" class="btn btn-primary" value="Запустить проверку">
 </form>
 <div>
-  <table class="table table-bordered table-hover mt-2">
+  <table class="table table-bordered table-hover mt-2" data-test="checks">
     <thead>
       <tr>
         <th>ID</th>
@@ -40,7 +40,7 @@
     {% for check in all_checks %}
       <tr>
         <td>{{ check.id }}</td>
-        <td>{{ check.status }}</td>
+        <td>{{ check.status_code }}</td>
         <td>{{ check.h1 }}</td>
         <td>{{ check.title }}</td>
         <td>{{ check.description }}</td>

@@ -59,13 +59,13 @@ def get_url_by_id(url_id):
     return url
 
 
-def add_check(url_id, status, h1, title, description):
+def add_check(url_id, status_code, h1, title, description):
     with get_db_cursor() as cursor:
         cursor.execute(
             """
             INSERT INTO url_checks (
                 url_id,
-                status,
+                status_code,
                 h1,
                 title,
                 description
@@ -74,7 +74,7 @@ def add_check(url_id, status, h1, title, description):
             """,
             (
                 url_id,
-                status,
+                status_code,
                 h1,
                 title,
                 description
@@ -103,11 +103,11 @@ def get_checked_urls():
         SELECT
             urls.id,
             urls.name,
-            COALESCE(url_checks.status::text, '') as status,
+            COALESCE(url_checks.status_code::text, '') as status_code,
             COALESCE(DATE(MAX(url_checks.created_at))::text, '') as latest_check
         FROM urls
         LEFT JOIN url_checks ON urls.id = url_checks.url_id
-        GROUP BY urls.id, url_checks.status
+        GROUP BY urls.id, url_checks.status_code
         ORDER BY urls.id DESC
     """
 
