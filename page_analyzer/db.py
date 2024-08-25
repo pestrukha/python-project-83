@@ -84,10 +84,16 @@ def add_check(url_id, status_code, h1, title, description):
 
 def get_checks(url_id):
     query = """
-        SELECT *
+        SELECT
+            id,
+            status_code,
+            COALESCE(h1, '') as h1,
+            COALESCE(title, '') as title,
+            COALESCE(description, '') as description,
+            created_at
         FROM url_checks
         WHERE url_id = %s
-        ORDER BY created_at DESC
+        ORDER BY id DESC
     """
     value = (url_id,)
 
